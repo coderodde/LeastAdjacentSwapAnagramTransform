@@ -1,3 +1,4 @@
+
 package net.coderodde.fun;
 
 import java.util.ArrayDeque;
@@ -18,17 +19,6 @@ import java.util.stream.Stream;
  */
 public final class LeastInversionsAnagramTransform {
     
-    public static final class InversionIndexPair {
-        
-        public int index1;
-        public int index2;
-        
-        public InversionIndexPair(int index1,
-                                  int index2) {
-            this.index1 = index1;
-            this.index2 = index2;
-        }
-    }
     
     public static List<InversionIndexPair> 
         findAnagramTransformation(String string1,

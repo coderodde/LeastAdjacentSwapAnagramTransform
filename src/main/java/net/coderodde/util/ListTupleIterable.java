@@ -13,16 +13,16 @@ import java.util.Objects;
  * @author Rodio "rodde" Efremov
  * @version 1.6 (Jan 5, 2019)
  */
-public final class FancyListIterable<T> implements Iterable<List<T>> {
+public final class ListTupleIterable<T> implements Iterable<List<T>> {
 
-    private final FancyListIterator<T> iterator;
+    private final ListTupleIterator<T> iterator;
     
-    public FancyListIterable(List<T> actualElements) {
+    public ListTupleIterable(List<T> actualElements) {
         Objects.requireNonNull(actualElements, "The actual elements are null.");
         
         
         
-        this.iterator = new FancyListIterator<>(actualElements);
+        this.iterator = new ListTupleIterator<>(actualElements);
     }
     
     @Override
