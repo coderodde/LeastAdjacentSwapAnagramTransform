@@ -25,8 +25,23 @@ public interface LeastInversionsAnagramTransformAlgorithm {
             this.startingIndex = startingIndex;
         }
         
-        public void applyTo() {
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
             
+            if (!o.getClass().equals(this.getClass())) {
+                return false;
+            }
+            
+            InversionDescriptor other = (InversionDescriptor) o;
+            return startingIndex == other.startingIndex;
+        }
+        
+        @Override
+        public String toString() {
+            return "(" + startingIndex + ", " + (startingIndex + 1) + ")";
         }
     }
     

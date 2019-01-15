@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import net.coderodde.fun.LeastInversionsAnagramTransformAlgorithm;
 import static net.coderodde.fun.
        LeastInversionsAnagramTransformAlgorithm.areAnagrams;
@@ -42,7 +40,11 @@ implements LeastInversionsAnagramTransformAlgorithm {
         int[] rawIndices = computeImpl(string1,
                                        string2);
         
-        return toInversionDescriptorList(rawIndices);
+        List<InversionDescriptor> result = 
+                toInversionDescriptorList(rawIndices);
+        
+        Collections.reverse(result);
+        return result;
     }
     
     /**
@@ -118,9 +120,14 @@ implements LeastInversionsAnagramTransformAlgorithm {
      */
     private static int[] computeImpl(String string1, 
                                      String string2) {
+        char[] sourceStringChars = string1.toCharArray();
+        char[] targetStringChars = string2.toCharArray();
+        char[] bufferStringChars = new char[sourceStringChars.length];
+        
         for (int inversions = 1; true; inversions++) {
-            int[] solution = computeImpl(string1, 
-                                         string2,
+            int[] solution = computeImpl(sourceStringChars, 
+                                         targetStringChars,
+                                         bufferStringChars,
                                          inversions);
             if (solution != null) {
                 return solution;
@@ -132,29 +139,27 @@ implements LeastInversionsAnagramTransformAlgorithm {
      * Attempts to find an inversion descriptor list of length 
      * {@code inversions}. If no such exist, returns {@code null}.
      * 
-     * @param string1    the source string.
-     * @param string2    the target string.
+     * @param sourceStringChars    the source string.
+     * @param targetStringChars    the target string.
      * @param inversions the requested number of inversions in the result.
      * @return if not such list exist.
      */
-    private static int[] computeImpl(String string1, 
-                                     String string2,
+    private static int[] computeImpl(char[] sourceStringChars, 
+                                     char[] targetStringChars,
+                                     char[] bufferStringChars,
                                      int inversions) {
-        char[] chars1 = string1.toCharArray();
-        char[] chars2 = string2.toCharArray();
-        char[] workArray = new char[chars1.length];
         // string1.length() - 1, i.e., there are at most n - 1 distinct 
         // inversion pairs.
         ListTupleIndexIterator iterator = 
                 new ListTupleIndexIterator(inversions, 
-                                           string1.length() - 1);
+                                           sourceStringChars.length - 2);
                 
         int[] indices = iterator.getIndexArray();
         
         do {
-            int[] resultIndices = applyIndicesToWorkArray(workArray,
-                                                          chars1,
-                                                          chars2,
+            int[] resultIndices = applyIndicesToWorkArray(sourceStringChars,
+                                                          targetStringChars,
+                                                          bufferStringChars,
                                                           indices);
             if (resultIndices != null) {
                 return resultIndices;
@@ -220,66 +225,4 @@ implements LeastInversionsAnagramTransformAlgorithm {
                              0, 
                              workArray.length);
     }
-//    
-//    private static List<InversionDescriptor>
-//         applyInversionIndicesTo(char[] targetCharacters,
-//                                 char[] workArray,
-//                                 List<Integer> inversionBegin) {
-//             throw new IllegalStateException("Reached a stub.");
-//    }
-//    
-//    /**
-//     * Creates a list of increasing integer values from zero to 
-//     * {@code inversions - 1}.
-//     * 
-//     * @param inversions number of total inversions.
-//     * @return a sorted list of index descriptor beginning indices.
-//     */
-//    private static List<Integer> createInversionBeginIndexList(int inversions) {
-//        return IntStream.range(0, inversions)
-//                        .boxed()
-//                        .collect(Collectors.toList());
-//    }
-//    
-//    private static List<InversionDescriptor> 
-//            produceInversionListPermutations(
-//                    char[] sourceCharacters,
-//                    char[] targetCharacters,
-//                    char[] workCharacters,
-//                    int[] inversionIndices) {
-//        Iterator<List<InversionDescriptor>> iterator =
-//                new PermutationIterable<>(inversionPairs).iterator();
-//        
-//        while (iterator.hasNext()) {
-//            List<InversionDescriptor> colustionCandidate = iterator.next();
-////            applyToWorkArray(workCharacters, 
-////                             sourceCharacters, 
-////                             solutionCandidate);
-//            
-//            if (Arrays.equals(targetCharacters, workCharacters)) {
-//                
-//            }
-//        }
-//        
-//        List<InversionDescriptor> solution;
-//        
-//        return null;
-//    }
-//    
-////    private static List<Inverion applyToWorkArray(char[] workCharacters,
-////                                                  char[] sourceCharacters,
-////                                                  List<Inverion)
-//            
-//    /**
-//     * Creates and returns an initial inversionDescripr
-//     * @param inversions
-//     * @return 
-//     */
-////    private static List<InversionDescriptor> createSolutionCandidate(
-////            int inversions) {
-////        return new ArrayList<>(
-////                IntStream.range(0, inversions).map((int i) -> {
-////                    return new InversionDescriptor(0, 1);
-////                }));
-////    }
 }
