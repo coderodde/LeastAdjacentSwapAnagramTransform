@@ -17,16 +17,17 @@ public interface LeastInversionsAnagramTransformAlgorithm {
     /**
      * Encodes an array inversion specified by two adjacent indices.
      */
-    public static final class InversionIndexPair {
+    public static final class InversionDescriptor {
         
         public int index1;
         public int index2;
         
-        public InversionIndexPair(int index1,
+        public InversionDescriptor(int index1,
                                   int index2) {
             this.index1 = index1;
             this.index2 = index2;
         }
+        
     }
     
     /**
@@ -38,8 +39,16 @@ public interface LeastInversionsAnagramTransformAlgorithm {
      * @return the list of inversions transforming the source array into the 
      *         target array.
      */
-    public List<InversionIndexPair> compute(String string1, String string2);
+    public List<InversionDescriptor> compute(String string1, String string2);
         
+    /**
+     * Checks that the two input strings are anagrams.
+     * 
+     * @param string1 the first string.
+     * @param string2 the second string.
+     * @return {@code true} if the two input strings are anagrams. {@code false}
+     *         otherwise.
+     */
     static  boolean areAnagrams(String string1, String string2) {
         Map<Character, Integer> characterCountMap1 = new HashMap<>();
         Map<Character, Integer> characterCountMap2 = new HashMap<>();

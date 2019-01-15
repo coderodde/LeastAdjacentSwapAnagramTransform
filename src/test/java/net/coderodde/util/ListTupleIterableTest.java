@@ -1,8 +1,6 @@
 package net.coderodde.util;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,43 +13,47 @@ public class ListTupleIterableTest {
         System.out.println(
                 "--- Start testing in " + this.getClass().getName() + " ---");
         
-        List<Integer> list = Arrays.asList(1, 2, 3);
-        Iterator<List<Integer>> iter = new ListTupleIterator<>(list);
-        
+        ListTupleIndexIterator iter = new ListTupleIndexIterator(3);
+        int[] indices = iter.getIndexArray();
         int lineNumber = 1;
         
         while (iter.hasNext()) {
-            List<Integer> l = iter.next();
-            System.out.printf("%3d: %s\n", lineNumber++, l);
+            System.out.printf(
+                    "%3d: %s\n", 
+                    lineNumber++, 
+                    Arrays.toString(indices));
+            iter.generateNextTupleIndices();
         }
         
         // 2 elements test.
-        list = Arrays.asList(1, 2);
-        iter = new ListTupleIterator<>(list);
+        iter = new ListTupleIndexIterator(2);
+        indices = iter.getIndexArray();
         
         assertTrue(iter.hasNext());
-        assertEquals(Arrays.asList(1, 1), iter.next());
+        assertTrue(Arrays.equals(new int[] { 0, 0 }, indices));
         
-        assertTrue(iter.hasNext());
-        assertEquals(Arrays.asList(1, 2), iter.next());
+        iter.generateNextTupleIndices();
+        assertTrue(Arrays.equals(new int[] { 0, 1 }, indices));
         
-        assertTrue(iter.hasNext());
-        assertEquals(Arrays.asList(2, 1), iter.next());
+        iter.generateNextTupleIndices();
+        assertTrue(Arrays.equals(new int[] { 1, 0 }, indices));
         
-        assertTrue(iter.hasNext());
-        assertEquals(Arrays.asList(2, 2), iter.next());
+        iter.generateNextTupleIndices();
+        assertTrue(Arrays.equals(new int[] { 1, 1 }, indices));
         
+        iter.generateNextTupleIndices();
         assertFalse(iter.hasNext());
         
         //// 1 element test.
-        list = Arrays.asList(1);
-        iter = new ListTupleIterator<>(list);
+        iter = new ListTupleIndexIterator(1);
+        indices = iter.getIndexArray();
         
         assertTrue(iter.hasNext());
-        assertEquals(Arrays.asList(1), iter.next());
+        assertTrue(Arrays.equals(new int[] { 0 }, indices));
+        iter.generateNextTupleIndices();
         assertFalse(iter.hasNext());
         
         System.out.println(
                 "--- Done testing in " + this.getClass().getName() + " ---");
-    }    
+    }
 }
