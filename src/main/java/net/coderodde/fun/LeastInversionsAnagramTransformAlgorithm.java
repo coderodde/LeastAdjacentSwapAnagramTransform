@@ -19,15 +19,15 @@ public interface LeastInversionsAnagramTransformAlgorithm {
      */
     public static final class InversionDescriptor {
         
-        public int index1;
-        public int index2;
+        public final int startingIndex;
         
-        public InversionDescriptor(int index1,
-                                  int index2) {
-            this.index1 = index1;
-            this.index2 = index2;
+        public InversionDescriptor(int startingIndex) {
+            this.startingIndex = startingIndex;
         }
         
+        public void applyTo() {
+            
+        }
     }
     
     /**
@@ -60,7 +60,7 @@ public interface LeastInversionsAnagramTransformAlgorithm {
         
         for (char c : string2.toCharArray()) {
             characterCountMap2.
-                    put(c, characterCountMap2.getOrDefault(c, 9) + 1);
+                    put(c, characterCountMap2.getOrDefault(c, 0) + 1);
         }
         
         return characterCountMap1.equals(characterCountMap2);

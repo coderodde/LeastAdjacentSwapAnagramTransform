@@ -2,7 +2,7 @@ package net.coderodde.fun.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,16 +33,32 @@ implements LeastInversionsAnagramTransformAlgorithm {
      */
     @Override
     public List<InversionDescriptor> compute(String string1, String string2) {
-        checkInputStrings (string1, string2);
-        return toInversionDescriptorList(computeImpl(string1, string2));
+        checkInputStrings(string1, string2);
+        
+        if (string1.equals(string2)) {
+            return new ArrayList<>();
+        }
+        
+        int[] rawIndices = computeImpl(string1,
+                                       string2);
+        
+        return toInversionDescriptorList(rawIndices);
     }
     
+    /**
+     * Converts an internal representation of inversion indices to a list of
+     * inversion descriptors.
+     * 
+     * @param inversionStartingIndices
+     * @return 
+     */
     private static List<InversionDescriptor>
-         toInversionDescriptorList(int[] indices) {
-         List<InversionDescriptor> result = new ArrayList<>(indices.length);
+         toInversionDescriptorList(int[] inversionStartingIndices) {
+         List<InversionDescriptor> result = 
+                 new ArrayList<>(inversionStartingIndices.length);
          
-         for (int index : indices) {
-             result.add(new InversionDescriptor(index, index + 1));
+         for (int inversionStartingIndex : inversionStartingIndices) {
+             result.add(new InversionDescriptor(inversionStartingIndex));
          }
          
          return result;
@@ -127,33 +143,65 @@ implements LeastInversionsAnagramTransformAlgorithm {
         char[] chars1 = string1.toCharArray();
         char[] chars2 = string2.toCharArray();
         char[] workArray = new char[chars1.length];
+        // string1.length() - 1, i.e., there are at most n - 1 distinct 
+        // inversion pairs.
         ListTupleIndexIterator iterator = 
-                new ListTupleIndexIterator(inversions);
+                new ListTupleIndexIterator(inversions, 
+                                           string1.length() - 1);
+                
         int[] indices = iterator.getIndexArray();
         
         do {
-            if (Arrays.equals(chars2, workArray)) {
-                return indices;
+            int[] resultIndices = applyIndicesToWorkArray(workArray,
+                                                          chars1,
+                                                          chars2,
+                                                          indices);
+            if (resultIndices != null) {
+                return resultIndices;
             }
             
-            applyIndicesToWorkArray(workArray, chars1, indices);
             iterator.generateNextTupleIndices();
         } while (iterator.hasNext());
         
         return null;
     }
     
-    private static void applyIndicesToWorkArray(char[] workArray, 
-                                                char[] sourceArray,
-                                                int[] indices) {
-        copySourceArrayToWorkArray(sourceArray,
-                                   workArray);
+    private static int[] applyIndicesToWorkArray(char[] sourceCharArray,
+                                                 char[] targetCharArray,
+                                                 char[] bufferCharArray,
+                                                 int[] indices) {
+        copySourceArrayToWorkArray(sourceCharArray,
+                                   bufferCharArray);
         
-        for (int inversionStartIndex : indices) {
-            swap(workArray, 
-                 inversionStartIndex,
-                 inversionStartIndex + 1);
+        PermutationIterable permutationIterable = 
+                new PermutationIterable(indices.length);
+        
+        int[] permutationIndices = permutationIterable.getIndexArray();
+        
+        while (permutationIterable.hasNext()) {
+            System.arraycopy(targetCharArray,
+                             0, 
+                             bufferCharArray, 
+                             0, 
+                             targetCharArray.length);
+            
+            // For each inversion pair permutation, apply it and see whether we
+            // got to the source character array:
+            for (int i : permutationIndices) {
+                int inversionIndex = indices[i];
+                swap(bufferCharArray,
+                     inversionIndex,
+                     inversionIndex + 1);
+            }
+            
+            if (Arrays.equals(bufferCharArray, sourceCharArray)) {
+                return permutationIndices;
+            }
+            
+            permutationIterable.generateNextPermutation();
         }
+        
+        return null;
     }
     
     private static void swap(char[] array,
@@ -172,66 +220,66 @@ implements LeastInversionsAnagramTransformAlgorithm {
                              0, 
                              workArray.length);
     }
-    
-    private static List<InversionDescriptor>
-         applyInversionIndicesTo(char[] targetCharacters,
-                                 char[] workArray,
-                                 List<Integer> inversionBegin) {
-             throw new IllegalStateException("Reached a stub.");
-    }
-    
-    /**
-     * Creates a list of increasing integer values from zero to 
-     * {@code inversions - 1}.
-     * 
-     * @param inversions number of total inversions.
-     * @return a sorted list of index descriptor beginning indices.
-     */
-    private static List<Integer> createInversionBeginIndexList(int inversions) {
-        return IntStream.range(0, inversions)
-                        .boxed()
-                        .collect(Collectors.toList());
-    }
-    
-    private static List<InversionDescriptor> 
-            produceInversionListPermutations(
-                    char[] sourceCharacters,
-                    char[] targetCharacters,
-                    char[] workCharacters,
-                    int[] inversionIndices) {
-        Iterator<List<InversionDescriptor>> iterator =
-                new PermutationIterable<>(inversionPairs).iterator();
-        
-        while (iterator.hasNext()) {
-            List<InversionDescriptor> colustionCandidate = iterator.next();
-//            applyToWorkArray(workCharacters, 
-//                             sourceCharacters, 
-//                             solutionCandidate);
-            
-            if (Arrays.equals(targetCharacters, workCharacters)) {
-                
-            }
-        }
-        
-        List<InversionDescriptor> solution;
-        
-        return null;
-    }
-    
-//    private static List<Inverion applyToWorkArray(char[] workCharacters,
-//                                                  char[] sourceCharacters,
-//                                                  List<Inverion)
-            
-    /**
-     * Creates and returns an initial inversionDescripr
-     * @param inversions
-     * @return 
-     */
-    private static List<InversionDescriptor> createSolutionCandidate(
-            int inversions) {
-        return new ArrayList<>(
-                IntStream.range(0, inversions).map((int i) -> {
-                    return new InversionDescriptor(0, 1);
-                }));
-    }
+//    
+//    private static List<InversionDescriptor>
+//         applyInversionIndicesTo(char[] targetCharacters,
+//                                 char[] workArray,
+//                                 List<Integer> inversionBegin) {
+//             throw new IllegalStateException("Reached a stub.");
+//    }
+//    
+//    /**
+//     * Creates a list of increasing integer values from zero to 
+//     * {@code inversions - 1}.
+//     * 
+//     * @param inversions number of total inversions.
+//     * @return a sorted list of index descriptor beginning indices.
+//     */
+//    private static List<Integer> createInversionBeginIndexList(int inversions) {
+//        return IntStream.range(0, inversions)
+//                        .boxed()
+//                        .collect(Collectors.toList());
+//    }
+//    
+//    private static List<InversionDescriptor> 
+//            produceInversionListPermutations(
+//                    char[] sourceCharacters,
+//                    char[] targetCharacters,
+//                    char[] workCharacters,
+//                    int[] inversionIndices) {
+//        Iterator<List<InversionDescriptor>> iterator =
+//                new PermutationIterable<>(inversionPairs).iterator();
+//        
+//        while (iterator.hasNext()) {
+//            List<InversionDescriptor> colustionCandidate = iterator.next();
+////            applyToWorkArray(workCharacters, 
+////                             sourceCharacters, 
+////                             solutionCandidate);
+//            
+//            if (Arrays.equals(targetCharacters, workCharacters)) {
+//                
+//            }
+//        }
+//        
+//        List<InversionDescriptor> solution;
+//        
+//        return null;
+//    }
+//    
+////    private static List<Inverion applyToWorkArray(char[] workCharacters,
+////                                                  char[] sourceCharacters,
+////                                                  List<Inverion)
+//            
+//    /**
+//     * Creates and returns an initial inversionDescripr
+//     * @param inversions
+//     * @return 
+//     */
+////    private static List<InversionDescriptor> createSolutionCandidate(
+////            int inversions) {
+////        return new ArrayList<>(
+////                IntStream.range(0, inversions).map((int i) -> {
+////                    return new InversionDescriptor(0, 1);
+////                }));
+////    }
 }

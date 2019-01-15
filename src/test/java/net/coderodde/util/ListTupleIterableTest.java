@@ -1,7 +1,6 @@
 package net.coderodde.util;
 
 import java.util.Arrays;
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -13,7 +12,7 @@ public class ListTupleIterableTest {
         System.out.println(
                 "--- Start testing in " + this.getClass().getName() + " ---");
         
-        ListTupleIndexIterator iter = new ListTupleIndexIterator(3);
+        ListTupleIndexIterator iter = new ListTupleIndexIterator(3, 2);
         int[] indices = iter.getIndexArray();
         int lineNumber = 1;
         
@@ -26,7 +25,7 @@ public class ListTupleIterableTest {
         }
         
         // 2 elements test.
-        iter = new ListTupleIndexIterator(2);
+        iter = new ListTupleIndexIterator(2, 1);
         indices = iter.getIndexArray();
         
         assertTrue(iter.hasNext());
@@ -45,7 +44,7 @@ public class ListTupleIterableTest {
         assertFalse(iter.hasNext());
         
         //// 1 element test.
-        iter = new ListTupleIndexIterator(1);
+        iter = new ListTupleIndexIterator(1, 0);
         indices = iter.getIndexArray();
         
         assertTrue(iter.hasNext());
