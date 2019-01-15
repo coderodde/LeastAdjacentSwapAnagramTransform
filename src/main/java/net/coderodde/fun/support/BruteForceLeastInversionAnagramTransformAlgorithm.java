@@ -15,7 +15,7 @@ import net.coderodde.util.PermutationIterable;
 
 /**
  * This class implements a brute-force algorithm for computing shortest 
- * inversions list transforming one input string into anouther.
+ * inversions list transforming one input string into another.
  * 
  * @author Rodion "rodde" Efremov
  * @version 1.6 (Jan 5, 2019)

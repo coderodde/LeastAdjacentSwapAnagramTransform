@@ -1,5 +1,7 @@
 package net.coderodde.util;
 
+import java.util.Arrays;
+
 /**
  * This class implements list tuples iterators.
  * 
@@ -12,9 +14,10 @@ public final class ListTupleIndexIterator {
     private final int[] indices;
     private boolean iterationExhausted = false;
     
-    public ListTupleIndexIterator(int requestedMaximumIndex) {
+    public ListTupleIndexIterator(int numberOfIndices,
+                                  int requestedMaximumIndex) {
+        this.indices = new int[numberOfIndices];
         this.requestedMaximumIndex = requestedMaximumIndex;
-        this.indices = new int[requestedMaximumIndex];
     }
     
     public int[] getIndexArray() {
@@ -42,6 +45,17 @@ public final class ListTupleIndexIterator {
         
         for (int j = i + 1; j < n; j++) {
             indices[j] = 0;
+        }
+    }
+    
+    public static void main(String[] args) {
+        ListTupleIndexIterator iter = new ListTupleIndexIterator(3, 4);
+        int lineNumber = 1;
+        
+        while (iter.hasNext()) {
+            System.out.println(
+                    lineNumber++ + ": " + Arrays.toString(iter.getIndexArray()));
+            iter.generateNextTupleIndices();
         }
     }
 }
