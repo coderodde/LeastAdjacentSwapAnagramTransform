@@ -2,8 +2,7 @@ package net.coderodde.fun.support;
 
 import java.util.Arrays;
 import java.util.List;
-import net.coderodde.fun.LeastInversionsAnagramTransformAlgorithm;
-import net.coderodde.fun.LeastInversionsAnagramTransformAlgorithm.InversionDescriptor;
+import net.coderodde.fun.LeastAdjacentSwapAnagramTransformAlgorithm.AdjacentSwapDescriptor;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,12 +14,13 @@ import static org.junit.Assert.*;
  *
  * @author rodde
  */
-public class BruteForceLeastInversionAnagramTransformAlgorithmTest {
+public class BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest {
     
-    private static final BruteForceLeastInversionAnagramTransformAlgorithm
-            ALGORITHM = new BruteForceLeastInversionAnagramTransformAlgorithm();
+    private static final BruteForceLeastAdjacentSwapAnagramTransformAlgorithm
+            ALGORITHM =
+            new BruteForceLeastAdjacentSwapAnagramTransformAlgorithm();
     
-    public BruteForceLeastInversionAnagramTransformAlgorithmTest() {
+    public BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest() {
     }
     
     @BeforeClass
@@ -41,7 +41,7 @@ public class BruteForceLeastInversionAnagramTransformAlgorithmTest {
     
     @Test
     public void testEqualStrings() {
-        List<InversionDescriptor> result = ALGORITHM.compute("ABC", 
+        List<AdjacentSwapDescriptor> result = ALGORITHM.compute("ABC", 
                                                              "ABC");
         assertTrue(result.isEmpty());
     }
@@ -51,13 +51,13 @@ public class BruteForceLeastInversionAnagramTransformAlgorithmTest {
         String sourceString = "ABC";
         String targetString = "CAB";
         
-        List<InversionDescriptor> result = 
+        List<AdjacentSwapDescriptor> result = 
                 ALGORITHM.compute(sourceString, targetString);
         
         assertEquals(2, result.size());
         apply(sourceString, targetString, result);
-        assertEquals(result.get(0), new InversionDescriptor(1));
-        assertEquals(result.get(1), new InversionDescriptor(0));
+        assertEquals(result.get(0), new AdjacentSwapDescriptor(1));
+        assertEquals(result.get(1), new AdjacentSwapDescriptor(0));
         
         sourceString = "DBAC";
         targetString = "ABCD";
@@ -69,11 +69,11 @@ public class BruteForceLeastInversionAnagramTransformAlgorithmTest {
     
     private void apply(String sourceArray, 
                        String targetArray,
-                       List<InversionDescriptor> inversionDescriptorList) {
+                       List<AdjacentSwapDescriptor> inversionDescriptorList) {
         char[] buffer = sourceArray.toCharArray();
         char[] target = targetArray.toCharArray();
         
-        for (InversionDescriptor inversionDescriptor :
+        for (AdjacentSwapDescriptor inversionDescriptor :
                 inversionDescriptorList) {
             swap(buffer, inversionDescriptor);
         }
@@ -82,7 +82,7 @@ public class BruteForceLeastInversionAnagramTransformAlgorithmTest {
     }
     
     private static void swap(char[] bufferChars, 
-                             InversionDescriptor inversionDescriptor) {
+                             AdjacentSwapDescriptor inversionDescriptor) {
         int index1 = inversionDescriptor.startingIndex;
         int index2 = index1 + 1;
         

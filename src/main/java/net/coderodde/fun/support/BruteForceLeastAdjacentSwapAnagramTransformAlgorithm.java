@@ -5,11 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import net.coderodde.fun.LeastInversionsAnagramTransformAlgorithm;
-import static net.coderodde.fun.
-       LeastInversionsAnagramTransformAlgorithm.areAnagrams;
+import static net.coderodde.fun.LeastAdjacentSwapAnagramTransformAlgorithm.areAnagrams;
 import net.coderodde.util.ListTupleIndexIterator;
 import net.coderodde.util.PermutationIterable;
+import net.coderodde.fun.LeastAdjacentSwapAnagramTransformAlgorithm;
 
 /**
  * This class implements a brute-force algorithm for computing shortest 
@@ -18,8 +17,8 @@ import net.coderodde.util.PermutationIterable;
  * @author Rodion "rodde" Efremov
  * @version 1.6 (Jan 5, 2019)
  */
-public final class BruteForceLeastInversionAnagramTransformAlgorithm 
-implements LeastInversionsAnagramTransformAlgorithm {
+public final class BruteForceLeastAdjacentSwapAnagramTransformAlgorithm 
+implements LeastAdjacentSwapAnagramTransformAlgorithm {
 
     /**
      * Computes and returns a shortest sequence of inversion required to 
@@ -30,7 +29,7 @@ implements LeastInversionsAnagramTransformAlgorithm {
      * @return a sequence (list) of inversions.
      */
     @Override
-    public List<InversionDescriptor> compute(String string1, String string2) {
+    public List<AdjacentSwapDescriptor> compute(String string1, String string2) {
         checkInputStrings(string1, string2);
         
         if (string1.equals(string2)) {
@@ -40,7 +39,7 @@ implements LeastInversionsAnagramTransformAlgorithm {
         int[] rawIndices = computeImpl(string1,
                                        string2);
         
-        List<InversionDescriptor> result = 
+        List<AdjacentSwapDescriptor> result = 
                 toInversionDescriptorList(rawIndices);
         
         Collections.reverse(result);
@@ -54,13 +53,13 @@ implements LeastInversionsAnagramTransformAlgorithm {
      * @param inversionStartingIndices
      * @return 
      */
-    private static List<InversionDescriptor>
+    private static List<AdjacentSwapDescriptor>
          toInversionDescriptorList(int[] inversionStartingIndices) {
-         List<InversionDescriptor> result = 
+         List<AdjacentSwapDescriptor> result = 
                  new ArrayList<>(inversionStartingIndices.length);
          
          for (int inversionStartingIndex : inversionStartingIndices) {
-             result.add(new InversionDescriptor(inversionStartingIndex));
+             result.add(new AdjacentSwapDescriptor(inversionStartingIndex));
          }
          
          return result;
@@ -175,20 +174,16 @@ implements LeastInversionsAnagramTransformAlgorithm {
                                                  char[] targetCharArray,
                                                  char[] bufferCharArray,
                                                  int[] indices) {
-        copySourceArrayToWorkArray(sourceCharArray,
-                                   bufferCharArray);
-        
+        copy(sourceCharArray, bufferCharArray);
+       
         PermutationIterable permutationIterable = 
                 new PermutationIterable(indices.length);
         
         int[] permutationIndices = permutationIterable.getIndexArray();
         
         while (permutationIterable.hasNext()) {
-            System.arraycopy(targetCharArray,
-                             0, 
-                             bufferCharArray, 
-                             0, 
-                             targetCharArray.length);
+            copy(targetCharArray, 
+                 bufferCharArray);
             
             // For each inversion pair permutation, apply it and see whether we
             // got to the source character array:
@@ -217,12 +212,11 @@ implements LeastInversionsAnagramTransformAlgorithm {
         array[index2] = tmp;
     }
     
-    private static void copySourceArrayToWorkArray(char[] sourceArray,
-                                                   char[] workArray) {
-            System.arraycopy(sourceArray,
-                             0,
-                             workArray, 
-                             0, 
-                             workArray.length);
+    private static void copy(char[] sourceArray, char[] targetArray) {
+        System.arraycopy(sourceArray, 
+                         0, 
+                         targetArray, 
+                         0, 
+                         sourceArray.length);
     }
 }

@@ -12,16 +12,16 @@ import java.util.Map;
  * @author Rodion "rodde" Efremov
  * @version 1.6 (Jan 5, 2019)
  */
-public interface LeastInversionsAnagramTransformAlgorithm {
+public interface LeastAdjacentSwapAnagramTransformAlgorithm {
     
     /**
-     * Encodes an array inversion specified by two adjacent indices.
+     * Encodes an adjacent pair of elements in an array.
      */
-    public static final class InversionDescriptor {
+    public static final class AdjacentSwapDescriptor {
         
         public final int startingIndex;
         
-        public InversionDescriptor(int startingIndex) {
+        public AdjacentSwapDescriptor(int startingIndex) {
             this.startingIndex = startingIndex;
         }
         
@@ -35,7 +35,7 @@ public interface LeastInversionsAnagramTransformAlgorithm {
                 return false;
             }
             
-            InversionDescriptor other = (InversionDescriptor) o;
+            AdjacentSwapDescriptor other = (AdjacentSwapDescriptor) o;
             return startingIndex == other.startingIndex;
         }
         
@@ -54,7 +54,7 @@ public interface LeastInversionsAnagramTransformAlgorithm {
      * @return the list of inversions transforming the source array into the 
      *         target array.
      */
-    public List<InversionDescriptor> compute(String string1, String string2);
+    public List<AdjacentSwapDescriptor> compute(String string1, String string2);
         
     /**
      * Checks that the two input strings are anagrams.
