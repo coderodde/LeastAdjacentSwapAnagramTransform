@@ -6,8 +6,8 @@ import java.util.Map;
 
 /**
  * This interface defines the API and basic infrastructure for algorithms 
- * returning a shortest list of inversion required to transform one anagram into
- * another.
+ * returning a shortest list of adjacent swaps required to transform one anagram 
+ * into another.
  * 
  * @author Rodion "rodde" Efremov
  * @version 1.6 (Jan 5, 2019)
@@ -19,8 +19,17 @@ public interface LeastAdjacentSwapAnagramTransformAlgorithm {
      */
     public static final class AdjacentSwapDescriptor {
         
+        /**
+         * The index of the left list element. We imply here, that the index of
+         * the right list element is {@code startingIndex + 1}.
+         */
         public final int startingIndex;
         
+        /**
+         * Constructs a new, immutable descriptor.
+         * 
+         * @param startingIndex the index of the left list element.
+         */
         public AdjacentSwapDescriptor(int startingIndex) {
             this.startingIndex = startingIndex;
         }
@@ -46,12 +55,12 @@ public interface LeastAdjacentSwapAnagramTransformAlgorithm {
     }
     
     /**
-     * Finds a shortest sequence of inversion transforming {@code string1} into
-     * {@code string2}.
+     * Finds a shortest sequence of adjacent swaps, that transforms 
+     * {@code string1} into {@code string2}.
      * 
      * @param string1 the source string.
      * @param string2 the target string.
-     * @return the list of inversions transforming the source array into the 
+     * @return the list of adjacent swaps transforming the source array into the 
      *         target array.
      */
     public List<AdjacentSwapDescriptor> compute(String string1, String string2);
@@ -64,7 +73,7 @@ public interface LeastAdjacentSwapAnagramTransformAlgorithm {
      * @return {@code true} if the two input strings are anagrams. {@code false}
      *         otherwise.
      */
-    static  boolean areAnagrams(String string1, String string2) {
+    static boolean areAnagrams(String string1, String string2) {
         Map<Character, Integer> characterCountMap1 = new HashMap<>();
         Map<Character, Integer> characterCountMap2 = new HashMap<>();
         

@@ -41,6 +41,13 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
         return toAdjacentSwapDescriptorList(solutionDescriptor);
     }
     
+    /**
+     * Converts internal representation of a solution to the one according to
+     * API.
+     * 
+     * @param solutionDescriptor the solution descriptor.
+     * @return solution.
+     */
     private static final List<AdjacentSwapDescriptor> 
         toAdjacentSwapDescriptorList(SolutionDescriptor solutionDescriptor) {
         List<AdjacentSwapDescriptor> list =
@@ -53,25 +60,6 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
         }
         
         return list;
-    }
-    
-    /**
-     * Converts an internal representation of inversion indices to a list of
-     * inversion descriptors.
-     * 
-     * @param inversionStartingIndices
-     * @return 
-     */
-    private static List<AdjacentSwapDescriptor>
-         toInversionDescriptorList(int[] inversionStartingIndices) {
-         List<AdjacentSwapDescriptor> result = 
-                 new ArrayList<>(inversionStartingIndices.length);
-         
-         for (int inversionStartingIndex : inversionStartingIndices) {
-             result.add(new AdjacentSwapDescriptor(inversionStartingIndex));
-         }
-         
-         return result;
     }
     
     /**
@@ -145,6 +133,12 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
         }
     }
     
+    /**
+     * Holds internal representation of a solution. tupleIndices[i] holds the 
+     * index of the i'th adjacent swap to apply to the source array in order to 
+     * convert the source string to the target string. permutationIndices[i] 
+     * specifies the order the indices from tupleIndices should be applies.
+     */
     private static final class SolutionDescriptor {
         final int[] tupleIndices;
         final int[] permutationIndices;
@@ -170,25 +164,19 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
                                                   char[] bufferStringChars,
                                                   int inversions) {
         // string1.length() - 1, i.e., there are at most n - 1 distinct 
-        // inversion pairs.
+        // inversion pairs, with largest value n - 1:
         ListTupleIndexIterator iterator = 
                 new ListTupleIndexIterator(inversions, 
                                            sourceStringChars.length - 2);
                 
         int[] indices = iterator.getIndexArray();
         
-        // DBAC -> BDAC -> BADC -> ABDC -> ABCD
-        // (0, 1) -> (1, 2) -> (0, 1) -> (2, 3)
-        int num = 0;
         do {
             SolutionDescriptor solutionDescriptor = 
                     applyIndicesToWorkArray(sourceStringChars,
                                             targetStringChars,
                                             bufferStringChars,
                                             indices);
-            System.out.println(num);
-            num++;
-            
             if (solutionDescriptor != null) {
                 return solutionDescriptor;
             }
@@ -199,6 +187,17 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
         return null;
     }
     
+    /**
+     * Permutes all the entries in the {@code indices} and for each index 
+     * permutation applies the sequence and checks to see if they are sufficient
+     * for transforming the source array to the target array.
+     * 
+     * @param sourceCharArray the source character array.
+     * @param targetCharArray the target character array.
+     * @param bufferCharArray the buffer character array.
+     * @param indices the adjacent swap indices.
+     * @return a solution descriptor.
+     */
     private static SolutionDescriptor 
          applyIndicesToWorkArray(char[] sourceCharArray,
                                  char[] targetCharArray,
@@ -215,22 +214,11 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
             copy(sourceCharArray, 
                  bufferCharArray);
             
-            if (permutationIndices.length == 4) {
-                if (Arrays.equals(permutationIndices, new int[]{ 0, 2, 1, 3 }) ||
-                        Arrays.equals(permutationIndices, new int[] { 1, 2, 0, 3 })) {
-                            if (Arrays.equals(indices, new int[] { 0, 0, 1, 2 })) {
-                                System.out.println("Yeah: " + Arrays.toString(permutationIndices));
-                            }
-                }
-            }
-            
             // For each inversion pair permutation, apply it and see whether we
             // got to the source character array:
             for (int i : permutationIndices) {
                 int inversionIndex = indices[i];
-                if (inversionIndex > 2) {
-                    System.out.println("Oh fuck yeah!");
-                }
+                
                 swap(bufferCharArray,
                      inversionIndex,
                      inversionIndex + 1);
