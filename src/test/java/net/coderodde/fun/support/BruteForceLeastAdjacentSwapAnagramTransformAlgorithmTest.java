@@ -3,46 +3,19 @@ package net.coderodde.fun.support;
 import java.util.Arrays;
 import java.util.List;
 import net.coderodde.fun.LeastAdjacentSwapAnagramTransformAlgorithm.AdjacentSwapDescriptor;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author rodde
- */
 public class BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest {
     
     private static final BruteForceLeastAdjacentSwapAnagramTransformAlgorithm
             ALGORITHM =
             new BruteForceLeastAdjacentSwapAnagramTransformAlgorithm();
-    
-    public BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-    
+
     @Test
     public void testEqualStrings() {
         List<AdjacentSwapDescriptor> result = ALGORITHM.compute("ABC", 
-                                                             "ABC");
+                                                                "ABC");
         assertTrue(result.isEmpty());
     }
     
@@ -62,7 +35,10 @@ public class BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest {
         sourceString = "DBAC";
         targetString = "ABCD";
         
+        // DBAC -> BDAC -> BADC -> ABDC -> ABCD
+        // (0, 1) -> (1, 2) -> (0, 1) -> (2, 3) 
         result = ALGORITHM.compute(sourceString, targetString);
+        apply(sourceString, targetString, result);
         
         System.out.println(result);
     }
@@ -73,9 +49,9 @@ public class BruteForceLeastAdjacentSwapAnagramTransformAlgorithmTest {
         char[] buffer = sourceArray.toCharArray();
         char[] target = targetArray.toCharArray();
         
-        for (AdjacentSwapDescriptor inversionDescriptor :
+        for (AdjacentSwapDescriptor adjacentSwapDescriptor :
                 inversionDescriptorList) {
-            swap(buffer, inversionDescriptor);
+            swap(buffer, adjacentSwapDescriptor);
         }
         
         assertTrue(Arrays.equals(buffer, target));
