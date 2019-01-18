@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
- * This class implements an iterable over a list. The underlying permuting 
- * algorithm is deterministic but does not produce the permutation in any 
- * interesting order. The actual list to permute does not change the original
- * order. What comes to actual permutation, for each a new empty list is
- * constructed so it is safe to modify each of them.
+ * This class permutes an integer index array.
  * 
  * @author Rodde "rodde" Efremov
  * @version 1.6 (Jan 4, 2019)
@@ -112,16 +108,6 @@ public final class PermutationIterable {
                                       int toIndex) {
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
-        }
-    }
-    
-    public static void main(String[] args) {
-        PermutationIterable pi = new PermutationIterable(4);
-        int lineNumber = 1;
-        
-        while (pi.hasNext()) {
-            System.out.println(lineNumber++ + ": " + Arrays.toString(pi.getIndexArray()));
-            pi.generateNextPermutation();
         }
     }
 }

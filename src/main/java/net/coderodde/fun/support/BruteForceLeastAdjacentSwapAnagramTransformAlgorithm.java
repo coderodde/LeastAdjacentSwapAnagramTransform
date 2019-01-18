@@ -242,6 +242,11 @@ implements LeastAdjacentSwapAnagramTransformAlgorithm {
         array[index2] = tmp;
     }
     
+    /**
+     * Throws entire {@code sourceArray} to [@code targetArray}.
+     * @param sourceArray the source array.
+     * @param targetArray the target array.
+     */
     private static void copy(char[] sourceArray, char[] targetArray) {
         System.arraycopy(sourceArray, 
                          0, 
