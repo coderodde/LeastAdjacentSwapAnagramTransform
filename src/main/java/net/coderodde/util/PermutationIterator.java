@@ -9,12 +9,12 @@ import java.util.stream.IntStream;
  * @author Rodde "rodde" Efremov
  * @version 1.6 (Jan 4, 2019)
  */
-public final class PermutationIterable {
+public final class PermutationIterator {
 
     private final int[] indices;
     private boolean iterationExhausted;
     
-    public PermutationIterable(int numberoOfObjectsToPermute) {
+    public PermutationIterator(int numberoOfObjectsToPermute) {
         this.indices = IntStream.range(0, numberoOfObjectsToPermute).toArray();
         this.iterationExhausted = false;
     }
