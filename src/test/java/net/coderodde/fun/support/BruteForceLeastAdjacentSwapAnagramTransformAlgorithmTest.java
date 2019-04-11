@@ -2,7 +2,7 @@ package net.coderodde.fun.support;
 
 import java.util.Arrays;
 import java.util.List;
-import net.coderodde.fun.LeastAdjacentSwapAnagramTransformAlgorithm.AdjacentSwapDescriptor;
+import net.coderodde.fun.AdjacentSwapDescriptor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
